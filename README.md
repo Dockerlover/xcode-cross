@@ -30,7 +30,7 @@ actually is used:
 Host the resulting xcode.tar.xz file somewhere, then build the docker
 image like this:
 
-    docker build --build-arg XCODE_URL=http://path/to/your/xcode.tar.xz .
+    docker build --build-arg XCODE_URL=https://qiniu.17ued.club/xcbuild/xcode.tar.xz .
 
 The docker image has got all the necessary tools added to the path, but
 at the end of the path, so that e.g. `gcc` still resolves to the normal
