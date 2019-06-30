@@ -1,20 +1,27 @@
-FROM ubuntu:16.04
+# 基础镜像
+FROM ubuntu:18.04
+# 维护人员
+MAINTAINER  liuhong1.happy@163.com
 
-RUN apt-get update && apt-get install -y doxygen zip build-essential curl git cmake zlib1g-dev libpng-dev libxml2-dev gobjc python vim-tiny
+# 添加阿里云镜像源
+RUN echo "deb http://mirrors.aliyun.com/ubuntu bionic main restricted universe multiverse" > /etc/apt/sources.list && echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse" >> /etc/apt/sources.list
+
+# 安装xcbuild构建依赖
+RUN apt-get update && apt-get install -y vim gcc g++ make doxygen zip build-essential curl git cmake zlib1g-dev libpng-dev libxml2-dev gobjc python vim-tiny xz-utils inetutils-ping
 
 WORKDIR /opt
 
 RUN set -x \
-  && curl -LO http://releases.llvm.org/5.0.0/clang+llvm-5.0.0-linux-x86_64-ubuntu16.04.tar.xz \
-  && tar -Jxf clang+llvm-5.0.0-linux-x86_64-ubuntu16.04.tar.xz \
-  && rm clang+llvm-5.0.0-linux-x86_64-ubuntu16.04.tar.xz \
-  && mv clang+llvm-5.0.0-linux-x86_64-ubuntu16.04 clang \
+  && curl -LO http://releases.llvm.org/8.0.0/clang%2bllvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
+  && tar -Jxf clang+llvm-8.0.0-linux-x86_64-ubuntu18.04.tar.xz \
+  && rm clang+llvm-8.0.0-linux-x86_64-ubuntu18.04.tar.xz \
+  && mv clang+llvm-8.0.0-linux-x86_64-ubuntu18.04 clang \
   && cd clang \
   && mkdir bin-new \
-  && mv bin/clang-5.0 bin/clang bin/clang++ bin/llvm-dsymutil bin-new \
+  && mv bin/clang-8.0 bin/clang bin/clang++ bin/llvm-dsymutil bin-new \
   && rm -rf bin \
   && mv bin-new bin \
-  && rm -rf lib/*.a lib/*.so lib/*.so.* lib/clang/5.0.0/lib/linux
+  && rm -rf lib/*.a lib/*.so lib/*.so.* lib/clang/8.0.0/lib/linux
 
 RUN set -x \
   && git clone https://github.com/facebook/xcbuild.git xcbuild-src \
